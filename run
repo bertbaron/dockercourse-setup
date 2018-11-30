@@ -1,0 +1,4 @@
+#!/bin/bash
+
+which docker || sudo apt-get install -y docker.io
+which nmap || sudo apt-get -y nmap

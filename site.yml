@@ -7,5 +7,5 @@
 - hosts: course
   roles:
   - { role: docker-engine,        tags: [ 'docker' ] }
-#  - { role: butterfly,            tags: [ 'butterfly' ] }
+  - { role: butterfly,            tags: [ 'butterfly' ] }
 #  - { role: cursus,               tags: [ 'cursus' ]}

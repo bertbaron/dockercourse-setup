@@ -2,3 +2,5 @@ docker_users:
   - ubuntu
 
 docker_daemon_config: '{ "insecure-registries" : ["cursusregistry:5000"] }'
+
+butterfly_port: 80

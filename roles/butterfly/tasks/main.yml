@@ -1,0 +1,35 @@
+---
+- name: Install Butterfly webterminal
+  pip:
+    name: butterfly[systemd]
+    state: present
+
+- name: Install Butterfly webterminal themes just for fun
+  pip:
+    name: butterfly[themes]
+    state: present
+
+- name: Butterfly configuration directory
+  file:
+    name: /etc/butterfly
+    state: directory
+
+- name: Butterfly configuration
+  template:
+    src: "butterfly.conf.j2"
+    dest: "/etc/butterfly/butterfly.conf"
+  notify:
+    - restart butterfly deamon
+
+- name: Butterfly service file
+  template:
+    src: "butterfly.service.j2"
+    dest: "/etc/systemd/system/butterfly.service"
+  notify:
+    - restart butterfly deamon
+
+- name: Enable and start butterfly
+  service:
+    name: butterfly
+    enabled: yes
+    state: started

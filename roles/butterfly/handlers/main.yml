@@ -1,0 +1,4 @@
+---
+
+- name: restart butterfly deamon
+  action: service name=butterfly state=restarted

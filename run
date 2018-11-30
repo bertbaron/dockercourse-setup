@@ -1,11 +1,11 @@
 #!/bin/bash
 set -eu -o pipefail
 
-mkdir -p ~/bin
 which docker >/dev/null || sudo apt-get install -y docker.io
 which nmap >/dev/null || sudo apt-get -y nmap
 
 sudo usermod -a -G docker ubuntu
+mkdir -p ~/bin
 groups | grep -qw docker || (echo "Docker doesn't work, you may need to login again"; exit 1)
 echo "$PATH" | grep -q '/home/ubuntu/bin' || (echo "~/bin not in path, you may need to login again"; exit 1)
 
@@ -16,3 +16,4 @@ which ansible >/dev/null || docker run -ti --rm -e UID=$(id -u) -e GID=$(id -g) 
 echo '[course]' > hosts
 sudo nmap -sP 10.0.0.0/24 | grep -oP '\d+\.\d+\.\d+\.\d+' | grep -v '\.[12]$' >> hosts
 
+ansible-playbook -i hosts -b --vault-password-file=/home/user/.ssh/ansible.pwd site.yml

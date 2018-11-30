@@ -8,4 +8,4 @@
   roles:
   - { role: docker-engine,        tags: [ 'docker' ] }
   - { role: butterfly,            tags: [ 'butterfly' ] }
-#  - { role: cursus,               tags: [ 'cursus' ]}
+  - { role: course,               tags: [ 'course' ]}

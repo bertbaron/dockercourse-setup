@@ -1,0 +1,46 @@
+- name: Set registry fact if this is the registry host
+  set_fact:
+    registry: true
+  when: docker_registry in ansible_all_ipv4_addresses
+
+- name: Install packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - docker-compose
+    - git
+    - tree
+
+- name: Create cursus user
+  user:
+    name: cursus
+    password: "$6$t7vUNe3Y9vFcTi$UUnDj9wf780kv1Llggk1/u1.Q.iYq/M3KmFGZ5GoRrn81VaLRDhgU6ZaRMidL7b/m3FcRnnBcdgmbcuLdtzeG."
+    update_password: always
+    groups:
+      - docker
+      - sudo
+
+#docker run -d -p 5000:5000 --restart always --name registry registry:2
+- name: "Launch docker registry"
+  docker_container:
+    name: registry
+    image: "registry:2"
+    ports:
+      - "{{docker_registry}}:5000:5000"
+    restart_policy: unless-stopped
+    state: started
+  when: registry is defined
+
+- name: "Add curusregistry to hostfile"
+  lineinfile:
+    path: "/etc/hosts"
+    regexp: 'cursusregistry'
+    line: '{{docker_registry}} cursusregistry'
+
+- name: "Clone course repository"
+  git:
+    repo: 'https://github.com/bertbaron/dockercourse.git'
+    dest: /home/cursus/opdrachten
+    version: master
+    force: no
+  become: true
+  become_user: cursus

@@ -16,4 +16,4 @@ which ansible >/dev/null || docker run -ti --rm -e UID=$(id -u) -e GID=$(id -g) 
 echo '[course]' > hosts
 sudo nmap -sP 10.0.0.0/24 | grep -oP '\d+\.\d+\.\d+\.\d+' | grep -v '\.[12]$' >> hosts
 
-ansible-playbook -i hosts -b --vault-password-file=/home/user/.ssh/ansible.pwd site.yml
+ansible-playbook -i hosts -b site.yml

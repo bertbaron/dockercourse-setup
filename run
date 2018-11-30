@@ -1,9 +1,17 @@
 #!/bin/bash
+set -eu -o pipefail
 
+mkdir -p ~/bin
 which docker >/dev/null || sudo apt-get install -y docker.io
 which nmap >/dev/null || sudo apt-get -y nmap
 
 sudo usermod -a -G docker ubuntu
-groups | grep -qw docker || (echo "You may need to login again"; exit 1)
+groups | grep -qw docker || (echo "Docker doesn't work, you may need to login again"; exit 1)
+echo "$PATH" | grep -q '/home/ubuntu/bin' || (echo "~/bin not in path, you may need to login again"; exit 1)
 
-echo "done"
+# Find all hosts in our local network (exclude .1 and .2, those are likely gateways
+# TODO autodiscover local network
+echo '[course]'
+nmap -sP 10.0.0.0/24 | grep -oP '\d+\.\d+\.\d+\.\d+' | grep -v '\.[12]$' >> hosts
+
+which ansible >/dev/null || docker run -ti --rm -e UID=$(id -u) -e GID=$(id -g) -v ~/bin:/workdir bertbaron/ansible setup

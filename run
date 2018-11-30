@@ -6,15 +6,14 @@ which nmap >/dev/null || sudo apt-get install -y nmap
 which ansible >/dev/null || sudo apt-get install -y ansible
 
 sudo usermod -a -G docker ubuntu
-#mkdir -p ~/bin
 groups | grep -qw docker || (echo "Docker doesn't work, you may need to login again"; exit 1)
-#echo "$PATH" | grep -q '/home/ubuntu/bin' || (echo "~/bin not in path, you may need to login again"; exit 1)
 
-#which ansible >/dev/null || docker run -ti --rm -e UID=$(id -u) -e GID=$(id -g) -v ~/bin:/workdir bertbaron/ansible setup
-
-# Find all hosts in our local network (exclude .1 and .2, those are likely gateways
+# Find all hosts in our local network (exclude .1 and .2, those are likely gateways, and ourselves
 # TODO autodiscover local network
 echo '[course]' > hosts
-sudo nmap -sP 10.0.0.0/24 | grep -oP '\d+\.\d+\.\d+\.\d+' | grep -v '\.[12]$' >> hosts
+sudo nmap -sP 10.0.0.0/24 | grep -oP '\d+\.\d+\.\d+\.\d+' \
+   | grep -v '\.[12]$' \
+   | grep -v -E $(hostname -I | sed 's/\b \b/|/g') \
+   >> hosts
 
 ansible-playbook -i hosts -b site.yml

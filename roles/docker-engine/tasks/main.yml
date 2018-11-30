@@ -99,3 +99,4 @@
 - name: Nginx network
   docker_network:
     name: nginx
+    state: absent

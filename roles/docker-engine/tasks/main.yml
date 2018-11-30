@@ -1,0 +1,101 @@
+---
+
+# Variables setup
+- name: Include os-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+#- name: Import Docker APT public key.
+#  apt_key:
+#    keyserver: "{{ docker_pubkey_server }}"
+#    id: "{{ docker_pubkey_id }}"
+#    state: present
+#  when: ansible_os_family == 'Debian'
+
+- name: Add Docker repo key
+  apt_key: url="https://download.docker.com/linux/debian/gpg"
+  register: add_docker_repo
+
+- name: Add the APT Docker repository.
+  apt_repository:
+    repo: "{{ docker_apt_repo }}"
+    state: present
+    filename: 'docker'
+  when: ansible_os_family == 'Debian'
+
+- name: Install Docker dependencies.
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ docker_dependencies }}"
+
+# with_indexed_items is required as a workaround for this issue:
+# https://github.com/ansible/ansible-modules-core/issues/1178
+- name: Install python-pip.
+  package:
+    name: "{{ item.1 }}"
+    state: present
+  with_indexed_items: "{{ python_pip_packages }}"
+  when: (not skip_docker_py) or (ansible_os_family == 'Debian'
+    and ansible_python_version | version_compare('2.6.0', '>=')
+    and ansible_python_version | version_compare('2.7.9', '<'))
+
+- name: Install the Python SNI support packages.
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ python_sni_support_packages }}"
+  when: ansible_os_family == 'Debian'
+    and ansible_python_version | version_compare('2.6.0', '>=')
+    and ansible_python_version | version_compare('2.7.9', '<')
+
+# There extra pip dependencies are needed to add SSL SNI support to
+# Python version prior to 2.7.9. SNI support is needed by the Ansible
+# apt_key module.
+- name: Install the Python SNI python-pip dependencies.
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ python_sni_pip_dependencies }}"
+  when: ansible_os_family == 'Debian'
+    and ansible_python_version | version_compare('2.6.0', '>=')
+    and ansible_python_version | version_compare('2.7.9', '<')
+
+- name: Install the Docker Engine.
+  package:
+    name: docker-ce
+    state: present
+
+# Install docker-py
+- import_tasks: docker_py.yml
+  when: not skip_docker_py
+
+- name: Storage directory permissions
+  file:
+    path: "{{ docker_storage }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Custom daemon configuration
+  copy:
+    dest: /etc/docker/daemon.json
+    content: " {{docker_daemon_config}}"
+  notify: restart docker daemon
+
+- name: Configure users with docker access
+  user:
+    name: "{{ item }}"
+    groups: "docker"
+    append: yes
+  with_items: "{{ docker_users }}"
+
+- name: Enable the Docker daemon as a service and start it.
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Nginx network
+  docker_network:
+    name: nginx

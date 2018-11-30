@@ -19,4 +19,4 @@ sudo nmap -sP 10.0.0.0/24 | grep -oP '\d+\.\d+\.\d+\.\d+' \
 ansible-playbook -i hosts -b site.yml
 
 registry_ip="$(tail -n1 hosts)"
-printf "\n[all:vars]\ndocker_registry: $registry_ip" >> hosts
+printf "\n[all:vars]\ndocker_registry: $registry_ip\n" >> hosts

@@ -3,7 +3,7 @@
   apt:
     update_cache: yes
     cache_valid_time: 3600
-  register: result
+  register: apt_cache_result
 
 #- name: Install aptitude (requirement for apt module)
 #  package:
@@ -11,10 +11,10 @@
 #    state: latest
 
 - debug:
-    var: result
+    var: apt_cache_result
     verbosity: 2
 
-#- name: Upgrade APT to the lastest packages
-#  apt:
-#    upgrade: safe
-#  when: cache_updated
+- name: Upgrade APT to the lastest packages
+  apt:
+    upgrade: safe
+  when: apt_cache_result

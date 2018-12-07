@@ -12,7 +12,7 @@
 
 - debug:
     var: apt_cache_result
-    verbosity: 0
+    verbosity: 1
 
 - name: Upgrade APT to the lastest packages
   apt:

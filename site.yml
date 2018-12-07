@@ -4,8 +4,13 @@
   - name: Install Python
     raw: if test -f /usr/bin/python; then true; else (apt-get update && apt-get -y install python && touch /root/.python_installed); fi
 
+- hosts: bastion
+  roles:
+  - { role: base,                 tags: [ 'base' ]}
+
 - hosts: course
   roles:
+  - { role: base,                 tags: [ 'base' ]}
   - { role: docker-engine,        tags: [ 'docker' ] }
   - { role: butterfly,            tags: [ 'butterfly' ] }
   - { role: course,               tags: [ 'course' ]}

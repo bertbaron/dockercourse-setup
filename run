@@ -14,15 +14,20 @@ which ansible >/dev/null || sudo apt-get install -y ansible
 sudo usermod -a -G docker ubuntu
 groups | grep -qw docker || (echo "Docker doesn't work, you may need to login again"; exit 1)
 
+
+myIp=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+mySubnet='10.0.0.0/24' # TODO autodiscover local network
+
 # Find all hosts in our local network (exclude .1 and .2, those are likely gateways, and ourselves
-# TODO autodiscover local network
 echo '[course]' > hosts
-sudo nmap -sP 10.0.0.0/24 | grep -oP '\d+\.\d+\.\d+\.\d+' \
+sudo nmap -sP "$mySubnet" | grep -oP '\d+\.\d+\.\d+\.\d+' \
    | grep -v '\.[12]$' \
    | grep -v -E $(hostname -I | sed 's/\b \b/|/g') \
    >> hosts
 
 registry_ip="$(tail -n1 hosts)"
+
+printf "\n[bastion]\n$myIp\n" >> hosts
 printf "\n[all:vars]\ndocker_registry=$registry_ip\n" >> hosts
 
 ansible-playbook -i hosts -b site.yml

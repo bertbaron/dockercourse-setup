@@ -13,7 +13,7 @@
 - name: Create cursus user
   user:
     name: cursus
-    password: "$6$t7vUNe3Y9vFcTi$UUnDj9wf780kv1Llggk1/u1.Q.iYq/M3KmFGZ5GoRrn81VaLRDhgU6ZaRMidL7b/m3FcRnnBcdgmbcuLdtzeG."
+    password: "$6$1IyW/79Y$7LbxJx8kST2g5Wv4A8Op9lOJO16TLuauu6TM17xp2iK1O1r7T9Kkmo0EnhPuY40vpaHh4ggeO7vwPIV0MyNo31"
     update_password: always
     groups:
       - docker

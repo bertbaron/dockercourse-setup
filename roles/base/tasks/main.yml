@@ -1,0 +1,17 @@
+---
+- name: Update APT package cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  notify:
+    cache_updated
+
+#- name: Install aptitude (requirement for apt module)
+#  package:
+#    name: aptitude
+#    state: latest
+
+- name: Upgrade APT to the lastest packages
+  apt:
+    upgrade: safe
+  when: cache_updated

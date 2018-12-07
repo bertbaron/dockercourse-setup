@@ -17,4 +17,4 @@
 - name: Upgrade APT to the lastest packages
   apt:
     upgrade: safe
-  when: apt_cache_result
+  when: apt_cache_result.cache_updated

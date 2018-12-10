@@ -18,7 +18,7 @@ echo '[course]' > hosts
 sudo nmap -sP "$mySubnet" | grep -oP '\d+\.\d+\.\d+\.\d+' \
    | grep -v '\.[12]$' \
    | grep -v -E $(hostname -I | sed 's/\b \b/|/g') \
-   | sort -n
+   | sort -n \
    >> hosts
 
 registry_ip="$(tail -n1 hosts)"

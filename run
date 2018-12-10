@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu -o pipefail
 
-last_update=$(stat -c %Y /var/cache/apt/pkgcache.bin)
+last_update=$(stat -c %Y /var/lib/apt/periodic/update-success-stamp)
 now=$(date +%s)
 if [ $((now - last_update)) -gt 3600 ]; then
   sudo apt-get update

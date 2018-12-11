@@ -24,6 +24,6 @@ sudo nmap -sP "$mySubnet" | grep -oP '\d+\.\d+\.\d+\.\d+' \
 registry_ip="$(tail -n1 hosts)"
 
 printf "\n[bastion]\nlocalhost\n" >> hosts
-printf "\n[all:vars]\ndocker_registry=$registry_ip\n" >> hosts
+printf "\n[all:vars]\ndocker_registry=$registry_ip\nansible_ssh_common_args='-o StrictHostKeyChecking=no'\n" >> hosts
 
 ansible-playbook -i hosts -b site.yml "$@"

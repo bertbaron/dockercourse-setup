@@ -21,24 +21,33 @@ install() {
 	which "$cmd" > /dev/null || sudo apt-get install -y "$package"
 }
 
+# TODO install docker
+install docker-compose docker-compose
+install git git
+install vim vim
+
 addToDockerGroup() {
   sudo usermod -a -G docker $USER
   echo "User added to docker group, new login required"
   exit 1
 }
 
-groups | grep docker || addToDockerGroup
+groups | grep docker > /dev/null || addToDockerGroup
 
-# TODO install docker
-install docker-compose docker-compose
-install git git
-install vim vim
+myIp='192.168.101.102'
+
+if grep -q cursusregistry /etc/hosts; then
+    sudo sed -i 's/^cursusregistry.*$/cursusregistry '$myIp'/g' /etc/hosts
+else
+    echo 'cursusregistry '$myIp | sudo tee -a /etc/hosts > /dev/null
+fi
+
 
 # install Visual Studio Code
 # FIXME Find reliable download link
 #which code > /dev/null || wget -O /tmp/vc.deb https://go.microsoft.com/fwlink/?LinkID=760868 && sudo apt install /tmp/vc.deb
 
-echo '{ "insecure-registries" : ["'cursusregistry':5000"] }' | sudo tee /etc/docker/daemon.json
+echo '{ "insecure-registries" : ["'cursusregistry':5000"] }' | sudo tee /etc/docker/daemon.json > /dev/null
 sudo systemctl reload docker
 
 if [[ ! -d "$HOME/dockercourse" ]]; then

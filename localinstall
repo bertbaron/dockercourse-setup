@@ -1,5 +1,13 @@
 #!/bin/bash
+#
+# Script to install stuff locally on course pc's
+#
+# To execute, run:
+#
+# rm -f localinstall && wget https://raw.githubusercontent.com/bertbaron/dockercourse-setup/master/localinstall && bash ./localinstall
+
 set -eu -o pipefail
+
 
 last_update=$(stat -c %Y /var/lib/apt/periodic/update-success-stamp)
 now=$(date +%s)

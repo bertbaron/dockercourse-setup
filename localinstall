@@ -1,0 +1,25 @@
+#!/bin/bash
+set -eu -o pipefail
+
+last_update=$(stat -c %Y /var/lib/apt/periodic/update-success-stamp)
+now=$(date +%s)
+if [ $((now - last_update)) -gt 3600 ]; then
+  sudo apt-get update
+fi
+
+install() {
+	cmd="$1"
+	package="$2"
+	which "$cmd" > /dev/null || sudo apt-get install -y "$package"
+}
+
+# TODO install docker
+install docker-compose docker-compose
+install git git
+install vim vim
+
+if [[ ! -d "$HOME/dockercourse" ]]; then
+	(cd $HOME && git clone https://github.com/bertbaron/dockercourse.git)
+fi
+
+(cd $HOME/dockercourse && git pull) || echo "PULL FAILED!"

@@ -37,9 +37,9 @@ groups | grep docker > /dev/null || addToDockerGroup
 myIp='192.168.101.102'
 
 if grep -q cursusregistry /etc/hosts; then
-    sudo sed -i 's/^cursusregistry.*$/cursusregistry '$myIp'/g' /etc/hosts
+    sudo sed -i 's/^cursusregistry.*$/'$myIp' cursusregistry/g' /etc/hosts
 else
-    echo 'cursusregistry '$myIp | sudo tee -a /etc/hosts > /dev/null
+    echo "$myIp cursusregistry" | sudo tee -a /etc/hosts > /dev/null
 fi
 
 

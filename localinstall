@@ -4,7 +4,7 @@
 #
 # To execute, run:
 #
-# rm -f localinstall && wget https://raw.githubusercontent.com/bertbaron/dockercourse-setup/master/localinstall && bash ./localinstall
+# wget -O localinstall https://raw.githubusercontent.com/bertbaron/dockercourse-setup/master/localinstall && bash ./localinstall
 
 set -eu -o pipefail
 
@@ -25,6 +25,9 @@ install() {
 install docker-compose docker-compose
 install git git
 install vim vim
+
+# FIXME Find reliable download link
+which code > /dev/null || wget -O /tmp/vc.deb https://go.microsoft.com/fwlink/?LinkID=760868 && sudo apt install /tmp/vc.deb
 
 if [[ ! -d "$HOME/dockercourse" ]]; then
 	(cd $HOME && git clone https://github.com/bertbaron/dockercourse.git)

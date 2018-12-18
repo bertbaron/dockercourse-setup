@@ -30,7 +30,7 @@ install vim vim
 # FIXME Find reliable download link
 which code > /dev/null || wget -O /tmp/vc.deb https://go.microsoft.com/fwlink/?LinkID=760868 && sudo apt install /tmp/vc.deb
 
-sudo echo '{ "insecure-registries" : ["'192.168.101.102"':5000"] }' > /etc/docker/daemon.json
+echo '{ "insecure-registries" : ["'192.168.101.102':5000"] }' | sudo tee /etc/docker/daemon.json
 
 if [[ ! -d "$HOME/dockercourse" ]]; then
 	(cd $HOME && git clone https://github.com/bertbaron/dockercourse.git)

@@ -42,10 +42,11 @@ else
     echo "$myIp cursusregistry" | sudo tee -a /etc/hosts > /dev/null
 fi
 
+wget -O $HOME/Desktop/presentatie.odp https://owncloud.fambaron.nl/s/eQQXzoRdYfJws7P
 
 # install Visual Studio Code
 # FIXME Find reliable download link
-which code > /dev/null || wget -O /tmp/vc.deb https://go.microsoft.com/fwlink/?LinkID=760868 && sudo apt install /tmp/vc.deb
+which code > /dev/null || (wget -O /tmp/vc.deb https://go.microsoft.com/fwlink/?LinkID=760868 && sudo apt install /tmp/vc.deb)
 
 echo '{ "insecure-registries" : ["'cursusregistry':5000"] }' | sudo tee /etc/docker/daemon.json > /dev/null
 sudo systemctl reload docker

@@ -42,7 +42,8 @@ else
     echo "$myIp cursusregistry" | sudo tee -a /etc/hosts > /dev/null
 fi
 
-wget -O $HOME/Desktop/presentatie.odp https://owncloud.fambaron.nl/s/eQQXzoRdYfJws7P
+# https://owncloud.fambaron.nl/s/k8qRoPkFn4XB4Bz/download
+wget -O $HOME/Desktop/presentatie.odp https://owncloud.fambaron.nl/s/eQQXzoRdYfJws7P/download
 
 # install Visual Studio Code
 # FIXME Find reliable download link

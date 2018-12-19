@@ -43,7 +43,7 @@ else
 fi
 
 # https://owncloud.fambaron.nl/s/k8qRoPkFn4XB4Bz/download
-wget -O $HOME/Desktop/presentatie.odp https://owncloud.fambaron.nl/s/eQQXzoRdYfJws7P/download
+wget -O $HOME/Desktop/presentatie.odp https://owncloud.fambaron.nl/s/TQqsDg594qeReY8/download
 
 # install Visual Studio Code
 # FIXME Find reliable download link

@@ -1,0 +1,14 @@
+docker run -d -p 5000:5000 --name registry registry:2
+
+docker swarm init --advertise-addr 192.168.101.102
+
+docker node ls
+
+docker service create --replicas 1 published=8000,target=8000 --name greetingservice cursusregistry:5000/piet/greeting
+
+docker service ls
+
+docker service scale greetingservice=5
+
+
+docker stack deploy --compose-file docker-compose.yml greetingstack

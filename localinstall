@@ -8,6 +8,24 @@
 
 set -eu -o pipefail
 
+cd "$HOME"
+
+forceClean=false
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        -f|--force)
+        forceClean=true
+        shift
+    esac
+done
+
+if [[ "$forceClean" = true ]]; then
+  echo "FORCE CLEAN INSTALL"
+  rm -rf dockercourse
+  pkill firefox
+  rm -rf .mozilla/firefox
+fi
 
 last_update=$(stat -c %Y /var/lib/apt/periodic/update-success-stamp)
 now=$(date +%s)
@@ -34,7 +52,7 @@ addToDockerGroup() {
 
 groups | grep docker > /dev/null || addToDockerGroup
 
-myIp='192.168.101.102'
+myIp='192.168.101.144'
 
 if grep -q cursusregistry /etc/hosts; then
     sudo sed -i 's/^cursusregistry.*$/'$myIp' cursusregistry/g' /etc/hosts
@@ -47,7 +65,7 @@ wget -O $HOME/Desktop/presentatie.odp https://owncloud.fambaron.nl/s/TQqsDg594qe
 
 # install Visual Studio Code
 # FIXME Find reliable download link
-which code > /dev/null || (wget -O /tmp/vc.deb https://go.microsoft.com/fwlink/?LinkID=760868 && sudo apt install /tmp/vc.deb)
+which code > /dev/null || (wget -O /tmp/vc.deb https://go.microsoft.com/fwlink/?LinkID=760868 && sudo apt install -y /tmp/vc.deb)
 
 echo '{ "insecure-registries" : ["'cursusregistry':5000"] }' | sudo tee /etc/docker/daemon.json > /dev/null
 sudo systemctl reload docker

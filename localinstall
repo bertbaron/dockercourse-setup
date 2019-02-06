@@ -31,6 +31,9 @@ if [[ "$forceClean" = true ]]; then
   fi
 
   echo "Cleaning..."
+
+  docker swarm leave -f || true
+  docker rm -f $(docker ps -a) || true
   rm -rf dockercourse
   pkill firefox
   rm -rf .mozilla/firefox

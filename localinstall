@@ -88,3 +88,5 @@ if [[ ! -d "$HOME/dockercourse" ]]; then
 fi
 
 (cd $HOME/dockercourse && git pull) || echo "PULL FAILED!"
+
+echo "Installation complete"

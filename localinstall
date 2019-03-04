@@ -91,6 +91,7 @@ wget -O $HOME/Desktop/presentatie.odp https://owncloud.fambaron.nl/s/TQqsDg594qe
 which code > /dev/null || (wget -O /tmp/vc.deb https://go.microsoft.com/fwlink/?LinkID=760868 && sudo apt install -y /tmp/vc.deb)
 
 echo '{ "insecure-registries" : ["'cursusregistry':5000"] }' | sudo tee /etc/docker/daemon.json > /dev/null
+docker ps -q > /dev/null        # ensure docker deamon is started
 sudo systemctl reload docker
 
 if [[ ! -d "$HOME/dockercourse" ]]; then

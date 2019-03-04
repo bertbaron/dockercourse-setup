@@ -46,13 +46,23 @@ if [ $((now - last_update)) -gt 3600 ]; then
   sudo apt-get update
 fi
 
+installDocker() {
+    install apt-transport-https ca-certificates curl software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    sudo apt-get update
+}
+
 install() {
 	cmd="$1"
 	package="$2"
 	which "$cmd" > /dev/null || sudo apt-get install -y "$package"
 }
 
-# TODO install docker
+# Setup docker and prerequisites
+install curl curl
+which docker > /dev/null || installDocker
+
 install docker-compose docker-compose
 install git git
 install vim vim

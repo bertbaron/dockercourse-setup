@@ -34,6 +34,8 @@ if [[ "$forceClean" = true ]]; then
 
   docker swarm leave -f 2>&1 || true
   docker rm -f $(docker ps -aq) 2>&1 || true
+  docker rmi -f $(docker images -q) || true
+  docker system prune -f
   sudo rm -rf dockercourse
   pkill firefox || true
   rm -rf .mozilla/firefox
